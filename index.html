@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OrangeStay Guest House</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      color: #333;
+    }
+
+    .booking-container {
+      max-width: 700px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background: #fff;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      border-radius: 12px;
+    }
+
+    h2 {
+      color: #FFA500;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+      min-width: 48%;
+    }
+
+    button {
+      background: #FFA500;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 1rem;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #FF7F00;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background: #f9f9f9;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+    }
+
+    #successMessage {
+      margin-top: 1.5rem;
+      background: #e0ffe0;
+      padding: 12px;
+      border: 1px solid #2ecc71;
+      border-radius: 6px;
+      text-align: center;
+      color: #2c662d;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="booking-container">
+    <h2>Book a Room</h2>
+    <form id="bookingForm">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="name" required />
+      </div>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" required />
+      </div>
+
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" name="phone" required />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Check-in</label>
+          <input type="date" name="checkin" id="checkin" required />
+        </div>
+        <div class="form-group">
+          <label>Check-out</label>
+          <input type="date" name="checkout" id="checkout" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Room Type</label>
+        <select name="roomType" required>
+          <option value="">Select</option>
+          <option value="1-bedroom">1 Bedroom Flat</option>
+          <option value="2-bedroom">2 Bedroom Flat</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Adults</label>
+          <input type="number" name="adults" min="1" required />
+        </div>
+        <div class="form-group">
+          <label>Kids</label>
+          <input type="number" name="kids" min="0" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Special Request</label>
+        <textarea name="message" rows="3" placeholder="Optional..."></textarea>
+      </div>
+
+      <button type="submit">Book Now</button>
+    </form>
+
+    <div id="successMessage" class="hidden">✅ Booking submitted successfully!</div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 OrangeStay. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const form = document.getElementById('bookingForm');
+    const successMessage = document.getElementById('successMessage');
+    const checkinInput = document.getElementById('checkin');
+    const checkoutInput = document.getElementById('checkout');
+
+    // Disable past dates
+    const today = new Date().toISOString().split('T')[0];
+    checkinInput.min = today;
+    checkoutInput.min = today;
+
+    // Automatically adjust checkout min date based on checkin
+    checkinInput.addEventListener('change', () => {
+      const checkinDate = checkinInput.value;
+      checkoutInput.min = checkinDate;
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const booking = Object.fromEntries(formData.entries());
+
+      try {
+        const res = await fetch('/api/book', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(booking)
+        });
+
+        if (res.ok) {
+          form.reset();
+          successMessage.classList.remove('hidden');
+        } else {
+          alert('Failed to book. Try again.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Something went wrong.');
+      }
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+https://photos.app.goo.gl/ceCxvPxDVuPPxweA6
