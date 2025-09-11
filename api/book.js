@@ -24,6 +24,7 @@ export default async function handler(req, res) {
 
   const booking = {
     name,
+    phone,
     email,
     checkIn,
     checkOut,
@@ -50,3 +51,4 @@ export default async function handler(req, res) {
     await client.close();
   }
 }
+
