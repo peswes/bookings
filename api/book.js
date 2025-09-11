@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
 
-  const { name, email, checkIn, checkOut, roomType, adults, kids } = req.body;
+  const { name, email, phone, checkIn, checkOut, roomType, adults, kids } = req.body;
 
   // ✅ Basic validation
   if (!name || !email || !checkIn || !checkOut || !roomType) {
@@ -25,6 +25,7 @@ export default async function handler(req, res) {
   const booking = {
     name,
     email,
+    phone,
     checkIn,
     checkOut,
     roomType,
@@ -50,6 +51,7 @@ export default async function handler(req, res) {
     await client.close();
   }
 }
+
 
 
 
